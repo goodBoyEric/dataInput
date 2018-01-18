@@ -78,7 +78,7 @@ menu_id_search_ppr_payment = '0f817e0f-b9c5-42a6-977b-f9a05cb94af6'
 url = 'http://192.168.168.57:8080/ITAS/login'
 common_url = 'http://192.168.168.57:8080/ITAS/apexIndex?targetMenuId='
 username = 'tacoff01'
-password = '12345a*'
+password = '1a*'
 database = {
     'url': '192.168.169.77',
     'port': '1521',
