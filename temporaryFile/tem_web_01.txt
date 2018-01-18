@@ -1,0 +1,1 @@
+{'capture_payment_total_amount': '150.00', 'taxpayer_name': 'eIgNqcYAf ninickxog', 'VAT': 150.0, 'TIN': '33349062', 'till_no': '333490620001493', 'return_id': '120481'}
