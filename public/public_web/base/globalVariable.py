@@ -68,6 +68,14 @@ menu_id_search_ret_batch = '847cf223-6b62-4bb8-982c-b331e4b9f2e4'
 
 # tac url
 menu_id_search_tac_transaction = '2b0ca8ba-2820-43d8-b94b-7217e29ebaf7'
+menu_id_search_tac_journal = '9ffadd3b-f1a8-4947-9086-5a6dfb0d75e8'
+menu_id_search_tac_payment_extension = '07a9ca1d-7137-4ff4-ac79-4bbf2221b96c'
+menu_id_search_tac_running_balance = 'ce37c350-dc42-4d4f-85c2-113da35984a9'
+menu_id_search_tac_taxpayer_statement = '1fc7da33-af13-45fc-9b03-dc1809e47c9a'
+menu_id_search_tac_tax_refund = 'f2985e9f-5f89-4258-9285-6f4b17c05ea0'
+menu_id_search_tac_nontax_refund = '553d6ac5-0128-4d70-8ab7-70fa417cb0bb'
+menu_id_search_tac_tourist_refund = '3ad6d897-3974-48e2-812c-027fec38bc53'
+menu_id_search_tac_clearance_certificates = '7d5606ab-c1e6-46a9-983c-9eb8c43d4390'
 
 # ppr
 menu_id_search_ppr_office = 'ca6c94ab-4bcd-4f0e-bc9e-5e78081b12fa'
