@@ -12,11 +12,14 @@ class TACJournal:
         self.driver = driver
         self.URLTacJournal = common_url + menu_id_search_tac_journal
 
-    def journal_new(self, journal_type):
-        self.driver.get(self.URLTacJournal)
+    def __change_default_iframe(self):
         time.sleep(2)
         self.driver.switch_to_default_content()
         self.driver.switch_to_frame(iframe_element)
+
+    def journal_new(self, journal_type):
+        self.driver.get(self.URLTacJournal)
+        self.__change_default_iframe()
         self.driver.find_element(by=By.ID, value=TAC_Journal_Search_New_button).click()
         time.sleep(1)
         if journal_type == 'RORJ':
@@ -30,9 +33,7 @@ class TACJournal:
 
     def journal_search(self, tin='', journal_category='', journal_status=''):
         self.driver.get(self.URLTacJournal)
-        time.sleep(2)
-        self.driver.switch_to_default_content()
-        self.driver.switch_to_frame(iframe_element)
+        self.__change_default_iframe()
         # 输入journal_category
         if journal_category != '':
             Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Journal_Category)).\
@@ -47,19 +48,19 @@ class TACJournal:
         self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Process_button).click()
 
     def capture_miscellaneous_adjustment(self):
-        pass
+        self.__change_default_iframe()
 
     def capture_write_off(self):
-        pass
+        self.__change_default_iframe()
 
     def capture_reallocation_of_receipt(self):
-        pass
+        self.__change_default_iframe()
 
     def capture_transfer(self):
-        pass
+        self.__change_default_iframe()
 
     def approve_journal(self):
-        pass
+        self.__change_default_iframe()
 
     def complete_journal(self):
-        pass
+        self.__change_default_iframe()
