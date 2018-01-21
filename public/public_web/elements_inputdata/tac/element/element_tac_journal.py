@@ -22,3 +22,13 @@ TAC_Journal_Search_Write_off_CSS = """ul#journalCategories a[onclick="newJournal
 
 # search data --- first line&line data
 TAC_Journal_Search_Table_First_Line = 'table#gridview>tbody>tr:nth-child(1)'
+
+# capture journal
+TAC_Journal_Capture_TIN = 'creg01Tin_source'
+# TAC_Journal_Capture_Journal_Category = 'entity_ctac01JournalCategory'
+TAC_Journal_Capture_Journal_Type = 'entity_ctac01JournalType'
+# TAC_Journal_Capture_Journal_Reason_Type = 'entity_ctac01JournalReasonType'
+TAC_Journal_Capture_Submission_Source = 'entity_ctac01ReceivingChannel'
+TAC_Journal_Capture_Request_by = 'entity_ctac01JournalSource'
+TAC_Journal_Capture_Requestor = 'entity_ctac01CompletedBy'
+TAC_Journal_Capture_Journal_Description = 'entity_ctac01JournalDescription'

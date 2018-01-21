@@ -4,6 +4,7 @@
 from selenium.webdriver.common.by import By
 from public.public_web.base.globalVariable import *
 from selenium.webdriver.support.select import Select
+from public.public_web.base.newRandom import *
 from public.public_web.elements_inputdata.tac.element.element_tac_journal import *
 
 
@@ -47,8 +48,32 @@ class TACJournal:
             self.driver.find_element(by=By.ID, value=TAC_Journal_Search_TIN).send_keys(tin)
         self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Process_button).click()
 
-    def capture_miscellaneous_adjustment(self):
+    def capture_miscellaneous_adjustment(self, tin, journal_category='', journal_type=''):
         self.__change_default_iframe()
+        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_TIN).send_keys(tin)
+        for i in [TAC_Journal_Capture_Submission_Source, TAC_Journal_Capture_Request_by]:
+            Select(self.driver.find_element(by=By.ID, value=i)).\
+                select_by_index(Random().randint(a=2, b=8))
+        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Requestor).send_keys(username)
+        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Description).\
+            send_keys(RandomData().itas_random_char_nine)
+        if journal_category == 'MAJ':
+            if journal_type == 'AR':
+                pass
+            elif journal_type == 'AA':
+                pass
+            elif journal_type == 'RJ':
+                pass
+            elif journal_type == 'BF':
+                pass
+            else:pass
+        elif journal_category == 'TJ':
+            pass
+        elif journal_category == 'WOJ':
+            pass
+        elif journal_category == 'RORJ':
+            pass
+        else:pass
 
     def capture_write_off(self):
         self.__change_default_iframe()
