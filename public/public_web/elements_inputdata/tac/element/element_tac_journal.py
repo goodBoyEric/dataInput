@@ -32,3 +32,9 @@ TAC_Journal_Capture_Submission_Source = 'entity_ctac01ReceivingChannel'
 TAC_Journal_Capture_Request_by = 'entity_ctac01JournalSource'
 TAC_Journal_Capture_Requestor = 'entity_ctac01CompletedBy'
 TAC_Journal_Capture_Journal_Description = 'entity_ctac01JournalDescription'
+
+# button
+TAC_Journal_Capture_Add_button = 'btnSubAdd_ttac02JournalTransaction'
+TAC_Journal_Capture_AR_Search_button = 'btnSearchTACTransaction'
+TAC_Journal_Capture_AR_Doc_No_Text = 'q_ctac03DocumentNum'
+TAC_Journal_Capture_AR_Table_Data_CSS = 'table#TACTransactionGrid_ARDR>tbody>tr:nth-child(1)>td:nth-child(7)'

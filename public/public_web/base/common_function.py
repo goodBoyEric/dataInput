@@ -54,3 +54,24 @@ def is_element_exist(driver, by, element):
     except:
         flag = False
         return flag
+
+
+def date(current_date):
+    day = current_date[:2]
+    mouth = current_date[3:5]
+    year = current_date[6:]
+    if int(day) < 2:
+        day = '28'
+        if int(mouth) < 2:
+            year = str(int(year) - 1)
+            mouth = '12'
+        else:
+            mouth = str(int(mouth) - 1)
+            if len(mouth)<2:
+                mouth = '0' + mouth
+    else:
+        day = str(int(day) - 1)
+        if len(day) < 2:
+            day = '0' + day
+    edit_year = str(day) + '-' + mouth + '-' + year
+    return edit_year

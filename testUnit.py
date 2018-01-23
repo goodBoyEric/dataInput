@@ -14,6 +14,7 @@ from public.public_web.module.reg.regOperationRequest import REGOperationRequest
 from public.public_web.module.ppr.ppr_office import PPROffice
 from public.public_web.module.ppr.ppt_till import PPRTill
 from public.public_web.module.ppr.ppr_capture_payment import PPRCapturePayment
+from public.public_web.module.tac.tacJournal import TACJournal
 
 
 @ddt.ddt
@@ -136,7 +137,7 @@ class Test003RETReturn(unittest.TestCase):
         # Capture Return
         self.ee.return_search_screen(tin=tin,return_status='RCV')
         self.ee.capture_vat_return()
-        #
+        # 读取数据
         assessment_amount = return_post_verification\
             (driver=self.driver, url=common_url+menu_id_search_tac_transaction, tin=tin, tax_type=1)
         write_file(file_address=file_address,**{'VAT': float(assessment_amount)})
@@ -193,6 +194,18 @@ class Test004PPROffice(unittest.TestCase):
         # reconcile till
         self.hh.till_search(till=till_no)
         self.hh.till_reconcile()
+
+class Test005TACJournal(unittest.TestCase):
+    def setUp(self):
+        self.driver = browser_driver
+        self.start_browser = Itasbrowser(itas_browser_driver=self.driver)
+        self.start_browser.login_itas(username_01=username, password_01=password)
+        self.ii = TACJournal(self.driver)
+
+    def test001_MAJ_AR(self):
+        pass
+
+
 
 if __name__ == "__main__":
     # ITAS_suite = unittest.TestSuite()

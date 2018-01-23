@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from public.public_web.base.globalVariable import *
 from selenium.webdriver.support.select import Select
 from public.public_web.base.newRandom import *
+from public.public_web.base.common_function import date
 from public.public_web.elements_inputdata.tac.element.element_tac_journal import *
 
 
@@ -48,7 +49,7 @@ class TACJournal:
             self.driver.find_element(by=By.ID, value=TAC_Journal_Search_TIN).send_keys(tin)
         self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Process_button).click()
 
-    def capture_miscellaneous_adjustment(self, tin, journal_category='', journal_type=''):
+    def capture_miscellaneous_adjustment(self, tin, journal_category='', journal_type='', doc_no=''):
         self.__change_default_iframe()
         self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_TIN).send_keys(tin)
         for i in [TAC_Journal_Capture_Submission_Source, TAC_Journal_Capture_Request_by]:
@@ -59,12 +60,25 @@ class TACJournal:
             send_keys(RandomData().itas_random_char_nine)
         if journal_category == 'MAJ':
             if journal_type == 'AR':
-                pass
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('AR')
+                self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_Add_button).click()
+                time.sleep(2)
+                self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_AR_Doc_No_Text).send_keys(doc_no)
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Search_button).click()
+                time.sleep(1)
+                adjust_receipt_get_payment_date = self.driver.find_element\
+                    (by=By.CSS_SELECTOR,value=TAC_Journal_Capture_AR_Table_Data_CSS).text
+                edit_date = date(adjust_receipt_get_payment_date)
+
+                time.sleep()
             elif journal_type == 'AA':
+                Select(self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_Journal_Type)).select_by_value('AA')
                 pass
             elif journal_type == 'RJ':
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('RJ')
                 pass
             elif journal_type == 'BF':
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('BF')
                 pass
             else:pass
         elif journal_category == 'TJ':
