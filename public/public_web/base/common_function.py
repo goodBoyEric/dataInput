@@ -1,7 +1,7 @@
 # -*- coding:UTF-8 -*-
 # !/usr/bin/env python3
 # _author = liusong time = 2017/10/11 0011
-
+import time
 from selenium.webdriver.common.by import By
 
 
@@ -75,3 +75,21 @@ def date(current_date):
             day = '0' + day
     edit_year = str(day) + '-' + mouth + '-' + year
     return edit_year
+
+
+def judge_date(original_date, compare_date = 1):
+    if compare_date ==1:
+        compare_date = time.strftime('%d-%m-%Y', time.localtime())
+    if len(original_date) != 10:
+        raise ImportError('original_date 格式不正确')
+    #
+    original_date_day = original_date[:2]
+    original_date_mouth = original_date[3:5]
+    original_date_year = original_date[6:]
+    compare_date_day = compare_date[:2]
+    compare_date_mouth = compare_date[3:5]
+    compare_date_year = compare_date[6:]
+    if original_date_year <= compare_date_year:
+        return True
+    elif original_date_year:
+        pass

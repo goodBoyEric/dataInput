@@ -25,10 +25,16 @@ class RETReturn:
             select_return_status = self.driver.find_element(by=By.ID, value=Return_Status)
             Select(select_return_status).select_by_value(return_status)
         self.driver.find_element(by=By.ID, value=Return_Search_button).click()
-        return_search_table_line = Return_Search_Table + str(i) + ')'
+        while True:
+            return_search_table_line = Return_Search_Table + str(i) + ')'
+            return_search_table_line_due_data = return_search_table_line + '>td:nth-child(10)'
+            return_due_data = self.driver.find_element(by=By.ID, value=return_search_table_line_due_data).text
+
+
         print(return_search_table_line)
         time.sleep(2)
-        self.driver.find_element(by=By.CSS_SELECTOR, value=return_search_table_line).click()
+        self.driver.find_element(by=By.CSS_SELECTOR, value=return_search_table_line)
+
         self.driver.find_element(by=By.ID, value=Return_Process_button).click()
 
     def return_process_screen(self):
