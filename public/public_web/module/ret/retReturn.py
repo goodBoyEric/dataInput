@@ -5,7 +5,7 @@ import time
 from public.public_web.base.globalVariable import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-from public.public_web.base.common_function import attachment_click_function
+from public.public_web.base.common_function import attachment_click_function,judge_date
 from public.public_web.elements_inputdata.ret.retReturn.element import *
 from public.public_web.base.common_function import is_element_exist
 
@@ -25,10 +25,20 @@ class RETReturn:
             select_return_status = self.driver.find_element(by=By.ID, value=Return_Status)
             Select(select_return_status).select_by_value(return_status)
         self.driver.find_element(by=By.ID, value=Return_Search_button).click()
-        return_search_table_line = Return_Search_Table + str(i) + ')'
+        time.sleep(2)
+        while True:
+            return_search_table_line = Return_Search_Table + str(i) + ')'
+            return_search_table_line_due_data = return_search_table_line + '>td:nth-child(10)'
+            print(return_search_table_line_due_data)
+            return_due_data = self.driver.find_element(by=By.CSS_SELECTOR, value=return_search_table_line_due_data).text
+            print(return_due_data)
+            if judge_date(original_date=return_due_data) is True:
+                break
+            i = i + 1
         print(return_search_table_line)
         time.sleep(2)
         self.driver.find_element(by=By.CSS_SELECTOR, value=return_search_table_line).click()
+
         self.driver.find_element(by=By.ID, value=Return_Process_button).click()
 
     def return_process_screen(self):

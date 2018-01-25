@@ -80,7 +80,7 @@ def contact_information_verification(driver):
     return verify_data_list
 
 
-def return_post_verification(driver, url, tin, tax_type, year=2018):
+def return_post_verification(driver, url, tin, tax_type, doc_no='', year=2018):
     """
    VAT:1
    ITX:2
@@ -92,6 +92,8 @@ def return_post_verification(driver, url, tin, tax_type, year=2018):
     # tin&tax type&year
     driver.find_element(by=By.ID,value=TTransaction_TIN).send_keys(tin)
     driver.find_element(by=By.ID,value=TTransaction_TaxYear).send_keys(year)
+    if doc_no != '':
+        driver.find_element(by=By.ID, value=TTransaction_DocNo).send_keys(doc_no)
     select_taxtype = driver.find_element(by=By.ID,value=TTransaction_TaxType)
     Select(select_taxtype).select_by_value(str(tax_type))
     # search button

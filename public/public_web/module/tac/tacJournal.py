@@ -36,27 +36,42 @@ class TACJournal:
         if journal_type == 'WOJ':
             self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Search_Write_off_CSS).click()
 
-    def journal_search(self, tin='', journal_category='', journal_status=''):
+    def journal_search_data(self, tin='', journal_category='', journal_status='', journal_type=''):
         self.driver.get(self.URLTacJournal)
         self.__change_default_iframe()
         # 输入journal_category
         if journal_category != '':
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Journal_Category)).\
+            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Journal_Category)). \
                 select_by_value(journal_category)
         # 输入journal_status
         if journal_status != '':
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Journal_Status)).\
+            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Journal_Status)). \
                 select_by_value(journal_status)
         # 输入tin
         if tin != '':
             self.driver.find_element(by=By.ID, value=TAC_Journal_Search_TIN).send_keys(tin)
+
+        # 输入journal type
+        if journal_type != '':
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Journal_Type).send_keys(journal_type)
         self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Search_button).click()
+
+    def journal_search_doc_no(self, tin='', journal_category='', journal_status='', journal_type='', i=1):
+        self.journal_search_data(tin, journal_category, journal_status, journal_type)
+        time.sleep(2)
+        journal_search_get_data_element = TAC_Journal_Search_Table_First_Line + '>td:nth-child(' + str(i) + ')'
+        journal_search_get_data = self.driver.find_element(
+            by=By.CSS_SELECTOR, value=journal_search_get_data_element).text
+        return journal_search_get_data
+
+    def journal_search(self, tin='', journal_category='', journal_status='', journal_type=''):
+        self.journal_search_data(tin, journal_category, journal_status, journal_type)
         time.sleep(2)
         self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Search_Table_First_Line).click()
         self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Process_button).click()
         time.sleep(2)
 
-    def capture_miscellaneous_adjustment(self, tin, journal_type=''):
+    def capture_miscellaneous_adjustment(self, tin, journal_type='',doc_no1=''):
         self.__change_default_iframe()
         self.driver.switch_to_frame(iframe_reg_req_app)
         self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_TIN).send_keys(tin)
@@ -72,7 +87,7 @@ class TACJournal:
             get_vat_doc_no = """select t.ctac03_document_num from ttac03_transaction t
                                 inner join treg01_taxpayer a
                                 on t.creg01_taxpayer_uid = a.creg01_taxpayer_uid and t.ctac03_cr_dr='Cr'
-                                and a.creg01_tin =""" + tin
+                                and a.creg01_tin =""" + str(tin)
             doc_no = self.oracle.oracle_sql_execute_function(get_vat_doc_no,response=1)
             time.sleep(2)
             self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_AR_Doc_No_Text).send_keys(doc_no)
@@ -89,13 +104,31 @@ class TACJournal:
             time.sleep(1)
         elif journal_type == 'AA':
             Select(self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_Journal_Type)).select_by_value('AA')
-            pass
-        elif journal_type == 'RJ':
+
+        elif journal_type == 'RT':
             Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('RJ')
-            pass
-        elif journal_type == 'BF':
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
+            time.sleep(2)
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Doc_No_Yes).click()
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Doc_No).send_keys(doc_no1)
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Search_button).click()
+            time.sleep(2)
+            self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Capture_RT_CheckAll_CSS).click()
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_AddtoJournal_button).click()
+            time.sleep(1)
+
+        elif journal_type == 'ABFB':
+            time.sleep(1)
             Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('BF')
-            pass
+            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Type)).select_by_value('1')
+            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Liability_Type)).select_by_value('TAXLB')
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Year).clear()
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Year).send_keys('2019')
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Liability_Type).click()
+            time.sleep(1)
+            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Period)).select_by_value('1')
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Amount).send_keys('2019')
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
         else:
             pass
         attachment_click_function(driver=self.driver,direct_element=TAC_Journal_Capture_attachments, *[])

@@ -95,7 +95,7 @@ database = {
     'password': 'Itas_2017'
             }
 
-# 60系统测试地址
+# # 60系统测试地址
 # url = 'http://192.168.168.60:8080/ITAS/login'
 # common_url = 'http://192.168.168.60:8080/ITAS/apexIndex?targetMenuId='
 # username = 'tacoff01'
