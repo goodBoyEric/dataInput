@@ -96,8 +96,9 @@ class REGRegistrationRequest(object):
         self.driver.find_element(by=By.ID, value=Primary_Telephone_first).send_keys(RandomData().itas_random_int_four)
         self.driver.find_element(by=By.ID, value=Primary_Telephone_second).send_keys(RandomData().itas_random_int_four)
         self.driver.find_element(by=By.ID, value=Cellphone).send_keys(RandomData().itas_random_int_nine)
-        self.driver.find_element(by=By.ID, value=Email_Address).send_keys(str(RandomData().itas_random_int_nine) +
-                                                                          '@ca-css.com')
+        self.driver.find_element(by=By.ID, value=Email_Address).send_keys('song.liu@ca-css.com')
+        # self.driver.find_element(by=By.ID, value=Email_Address).send_keys(str(RandomData().itas_random_int_nine) +
+        #                                                                   '@ca-css.com')
 
         # Other Telephone&Fax/Fax2Email
         self.driver.find_element(by=By.ID, value=Other_Telephone_first).send_keys(RandomData().itas_random_int_four)

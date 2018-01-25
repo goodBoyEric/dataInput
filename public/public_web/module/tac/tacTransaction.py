@@ -15,4 +15,3 @@ class TACTransaction:
         self.driver.find_element(by=By.ID, value=TTransaction_TIN).send_keys(tin)
         if doc_no != '':
             self.driver.find_element(by=By.ID,value=TTransaction_DocNo).send_keys(doc_no)
-

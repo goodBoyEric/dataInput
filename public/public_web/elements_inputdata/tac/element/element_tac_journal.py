@@ -23,7 +23,7 @@ TAC_Journal_Search_Write_off_CSS = """ul#journalCategories a[onclick="newJournal
 # search data --- first line&line data
 TAC_Journal_Search_Table_First_Line = 'table#gridview>tbody>tr:nth-child(1)'
 
-# capture journal
+# capture journal common element
 TAC_Journal_Capture_TIN = 'creg01Tin_source'
 # TAC_Journal_Capture_Journal_Category = 'entity_ctac01JournalCategory'
 TAC_Journal_Capture_Journal_Type = 'entity_ctac01JournalType'
@@ -32,9 +32,23 @@ TAC_Journal_Capture_Submission_Source = 'entity_ctac01ReceivingChannel'
 TAC_Journal_Capture_Request_by = 'entity_ctac01JournalSource'
 TAC_Journal_Capture_Requestor = 'entity_ctac01CompletedBy'
 TAC_Journal_Capture_Journal_Description = 'entity_ctac01JournalDescription'
+TAC_Journal_Capture_Submit_button = 'btnSubmit'
+TAC_Journal_Capture_Approve_button = 'btnApprove'
+TAC_Journal_Capture_Approve_Yes_button_CSS = 'button.btn.btn-primary.save.ax-save'
+
+TAC_Journal_Capture_Reject_button = 'btnReject'
+TAC_Journal_Capture_SendBack_button = 'btnReturn'
+TAC_Journal_Capture_Complete_button = ''
+
 
 # button
 TAC_Journal_Capture_Add_button = 'btnSubAdd_ttac02JournalTransaction'
 TAC_Journal_Capture_AR_Search_button = 'btnSearchTACTransaction'
+TAC_Journal_Capture_AR_Add_to_Journal_button = 'btnAddToJournal'
+
+
+# capture adjust receipt
 TAC_Journal_Capture_AR_Doc_No_Text = 'q_ctac03DocumentNum'
 TAC_Journal_Capture_AR_Table_Data_CSS = 'table#TACTransactionGrid_ARDR>tbody>tr:nth-child(1)>td:nth-child(7)'
+TAC_Journal_Capture_AR_Target_Issue_Date = 'entity_targetIssueDate'
+TAC_Journal_Capture_attachments = """table#attachmentview>tbody td>input[type="checkbox"]"""

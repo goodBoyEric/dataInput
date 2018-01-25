@@ -195,18 +195,32 @@ class Test004PPROffice(unittest.TestCase):
         self.hh.till_search(till=till_no)
         self.hh.till_reconcile()
 
+
+@ddt.ddt
 class Test005TACJournal(unittest.TestCase):
     def setUp(self):
         self.driver = browser_driver
         self.start_browser = Itasbrowser(itas_browser_driver=self.driver)
         self.start_browser.login_itas(username_01=username, password_01=password)
-        self.ii = TACJournal(self.driver)
+        self.ii = TACJournal(self.driver, **database)
 
-    def test001_MAJ_AR(self):
-        pass
+    @ddt.data([temporaryFile_web_01])
+    @ddt.unpack
+    def test001_MAJ_AR(self, file_address):
+        # read file
+        tin = read_file('TIN', file_address=file_address)
 
+        # # Capture Adjust Receipt类型Journal
+        # self.ii.journal_new(journal_type='MAJ')
+        # self.ii.capture_miscellaneous_adjustment(tin=tin, journal_type='AR')
 
+        # Approve  Adjust Receipt类型Journal
+        self.ii.journal_search(tin, journal_category='MAJ', journal_status='CAPTURED')
+        self.ii.approve_journal()
 
+        # Complete Adjust Receipt类型Journal
+        self.ii.journal_search(tin, journal_category='MAJ', journal_status='APPROVED')
+        self.ii.complete_journal()
 if __name__ == "__main__":
     # ITAS_suite = unittest.TestSuite()
     # ITAS_suite.addTest(unittest.defaultTestLoader.loadTestsFromName(TestREGRegistrationRequest))
