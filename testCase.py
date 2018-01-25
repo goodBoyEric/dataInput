@@ -221,7 +221,6 @@ class Test005TACJournal(unittest.TestCase):
         # Complete Adjust Receipt类型Journal
         self.ii.journal_search(tin, journal_category='MAJ', journal_status='APPROVED')
         self.ii.complete_journal()
-if __name__ == "__main__":
-    # ITAS_suite = unittest.TestSuite()
-    # ITAS_suite.addTest(unittest.defaultTestLoader.loadTestsFromName(TestREGRegistrationRequest))
+
+if __name__ == '__main__':
     unittest.main()
