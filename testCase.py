@@ -117,31 +117,31 @@ class Test003RETReturn(unittest.TestCase):
     @ddt.data([temporaryFile_web_01])
     @ddt.unpack
     def test_001_return_search_screen(self, file_address):
-        # 读取TIN
-        tin = read_file('TIN', file_address=file_address)
-        # 提交Return
-        self.ee.return_search_screen(tin=tin)
-        self.ee.return_process_screen()
-        # 获取Return ID&写入到临时文件
-        return_id = self.ee.get_return_id(tin=tin)
-        write_file(file_address=file_address, **{'return_id':return_id})
-        # Send Batch
-        self.ff.batch_search_screen(return_id=return_id)
-        return_number_of_return = self.ff.batch_send_batch()
-        # Accept Batch
-        self.ff.batch_search_screen(return_id=return_id)
-        self.ff.batch_accept(number_of_return=return_number_of_return)
-        # Allocate Batch
-        self.ff.batch_search_screen(return_id=return_id)
-        self.ff.batch_allocate()
-        # Capture Return
-        self.ee.return_search_screen(tin=tin,return_status='RCV')
-        self.ee.capture_vat_return()
-        # 读取数据
-        assessment_amount = return_post_verification\
-            (driver=self.driver, url=common_url+menu_id_search_tac_transaction, tin=tin, doc_no=return_id,tax_type=1)
-        write_file(file_address=file_address,**{'VAT': float(assessment_amount)})
-        self.assertEqual(150,int(assessment_amount))
+            # 读取TIN
+            tin = read_file('TIN', file_address=file_address)
+            # 提交Return
+            self.ee.return_search_screen(tin=tin)
+            self.ee.return_process_screen()
+            # 获取Return ID&写入到临时文件
+            return_id = self.ee.get_return_id(tin=tin)
+            write_file(file_address=file_address, **{'return_id':return_id})
+            # Send Batch
+            self.ff.batch_search_screen(return_id=return_id)
+            return_number_of_return = self.ff.batch_send_batch()
+            # Accept Batch
+            self.ff.batch_search_screen(return_id=return_id)
+            self.ff.batch_accept(number_of_return=return_number_of_return)
+            # Allocate Batch
+            self.ff.batch_search_screen(return_id=return_id)
+            self.ff.batch_allocate()
+            # Capture Return
+            self.ee.return_search_screen(tin=tin,return_status='RCV')
+            self.ee.capture_vat_return()
+            # 读取数据
+            assessment_amount = return_post_verification\
+                (driver=self.driver, url=common_url+menu_id_search_tac_transaction, tin=tin, doc_no=return_id,tax_type=1)
+            write_file(file_address=file_address,**{'VAT': float(assessment_amount)})
+            self.assertEqual(150,int(assessment_amount))
 
 
 @ddt.ddt
@@ -267,6 +267,23 @@ class Test005TACJournal(unittest.TestCase):
         RT_doc_no = self.ii.journal_search_doc_no(tin=tin, journal_category='MAJ', journal_type='RT', i=2)
         write_file(file_address=file_address, **{'RT_doc_no':RT_doc_no})
 
+    @ddt.data([temporaryFile_web_01])
+    @ddt.unpack
+    def test004_MAJ_AA(self, file_address):
+        # read file
+        tin = read_file('TIN', file_address=file_address)
+
+        # Capture Adjust Brought Forward Balance类型Journal
+        self.ii.journal_new(journal_type='MAJ')
+        self.ii.capture_miscellaneous_adjustment(tin=tin, journal_type='AA')
+
+        # Approve Adjust Brought Forward Balance类型Journal
+        self.ii.journal_search(tin, journal_category='MAJ', journal_status='CAPTURED')
+        self.ii.approve_journal()
+
+        # Complete Adjust Brought Forward Balance类型Journal
+        self.ii.journal_search(tin, journal_category='MAJ', journal_status='APPROVED')
+        self.ii.complete_journal()
 
 if __name__ == '__main__':
     unittest.main()

@@ -71,4 +71,13 @@ TAC_Journal_Capture_RT_CheckAll_CSS = """table#TACTransactionGrid input[name="Ch
 TAC_Journal_Capture_RT_AddtoJournal_button='btnAddToJournal'
 
 # # Capture Adjust Receipt Amount
+TAC_Journal_Capture_ARA_Tax_Type = 'q_cret09TaxtypeUid'
+TAC_Journal_Capture_ARA_Liability_Type = 'q_ctac03LiabilityType'
+TAC_Journal_Capture_ARA_Tax_Year = 'q_ctac03TaxYear'
+TAC_Journal_Capture_ARA_Table_Data_CSS = 'table#TACTransactionGrid>tbody>tr:nth-child(1)>td:nth-child('
+TAC_Journal_Capture_ARA_Table_Data_Amount = 'input_reviseAmount_0'
 
+
+# send back
+
+# reject journal

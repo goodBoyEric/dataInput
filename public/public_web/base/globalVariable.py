@@ -47,6 +47,7 @@ excel_result_address = public_path + '\\data_excel\\result.xlsx'
 
 # Local Time
 Local_Time = time.strftime('%d-%m-%Y', time.localtime())
+file_local_time = time.strftime('%y%m%d_%H%M%S', time.localtime())
 
 # 浏览器驱动
 browser_driver = Chrome()

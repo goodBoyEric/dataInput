@@ -103,3 +103,14 @@ def judge_date(original_date, compare_date=1):
             return False
     else:
         return False
+
+
+def amount_change(orginal_amount, add_amount):
+    if orginal_amount.find('(') != -1:
+        change_amount = str(orginal_amount)
+        change_amount = change_amount.replace('(', '')
+        change_amount = float(change_amount.replace(')', '')) + int(add_amount)
+        return change_amount
+    else:
+        change_amount = float(orginal_amount) + add_amount
+        return change_amount

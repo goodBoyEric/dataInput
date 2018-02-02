@@ -41,6 +41,7 @@ class REGRegistrationRequest(object):
         self.driver.find_element(by=By.ID, value=Registration_Request_New_Button).click()
 
     def registration_request_search_capture(self, n):
+        reg_request_search_handle = self.driver.current_window_handle
         self.driver.implicitly_wait(time_to_wait=10)
         first_name = RandomData().itas_random_char_nine
         second_name = RandomData().itas_random_char_nine
@@ -218,6 +219,7 @@ class REGRegistrationRequest(object):
         self.driver.find_element(by=By.CSS_SELECTOR, value=capture_yes_button_CSS).click()
         print(taxpayer_name)
         time.sleep(3)
+        self.driver.switch_to_window(reg_request_search_handle)
         return taxpayer_name
 
     def registration_request_search_approve(self):

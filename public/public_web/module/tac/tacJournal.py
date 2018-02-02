@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from public.public_web.base.globalVariable import *
 from selenium.webdriver.support.select import Select
 from public.public_web.base.newRandom import *
-from public.public_web.base.common_function import date
+from public.public_web.base.common_function import date, amount_change
 from public.public_api.oracle import Oracle
 from public.public_web.base.common_function import attachment_click_function
 from public.public_web.elements_inputdata.tac.element.element_tac_journal import *
@@ -104,6 +104,23 @@ class TACJournal:
             time.sleep(1)
         elif journal_type == 'AA':
             Select(self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_Journal_Type)).select_by_value('AA')
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
+            time.sleep(2)
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Doc_No_NO).click()
+            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Tax_Type)).select_by_value('1')
+            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Liability_Type)).\
+                select_by_value('TAXLB')
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Tax_Year).clear()
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Search_button).click()
+            time.sleep(2)
+            original_amount = self.driver.find_element(
+                by=By.CSS_SELECTOR, value=TAC_Journal_Capture_ARA_Table_Data_CSS+'10'+')').text
+            change_amount = amount_change(original_amount, 5000)
+            print(change_amount)
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Table_Data_Amount).\
+                send_keys(str(change_amount))
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Add_to_Journal_button).click()
+            time.sleep(1)
 
         elif journal_type == 'RT':
             Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('RJ')
@@ -152,6 +169,12 @@ class TACJournal:
         time.sleep(2)
         self.driver.switch_to_default_content()
         self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Capture_Approve_Yes_button_CSS).click()
+
+    def send_back_journal(self):
+        pass
+
+    def reject_journal(self):
+        pass
 
     def complete_journal(self):
         self.__change_default_iframe()
