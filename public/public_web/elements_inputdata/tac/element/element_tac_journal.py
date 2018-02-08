@@ -79,5 +79,6 @@ TAC_Journal_Capture_ARA_Table_Data_Amount = 'input_reviseAmount_0'
 
 
 # send back
+TAC_Journal_Input_Text= 'textarea.txt'
 
 # reject journal

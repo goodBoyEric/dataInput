@@ -204,45 +204,45 @@ class Test005TACJournal(unittest.TestCase):
         self.start_browser.login_itas(username_01=username, password_01=password)
         self.ii = TACJournal(self.driver, **database)
 
-    # @ddt.data([temporaryFile_web_01])
-    # @ddt.unpack
-    # def test001_MAJ_AR(self, file_address):
-    #     # read file
-    #     tin = read_file('TIN', file_address=file_address)
-    #
-    #     # Capture Adjust Receipt类型Journal
-    #     self.ii.journal_new(journal_type='MAJ')
-    #     self.ii.capture_miscellaneous_adjustment(tin=tin, journal_type='AR')
-    #
-    #     # Approve  Adjust Receipt类型Journal
-    #     self.ii.journal_search(tin, journal_category='MAJ', journal_status='CAPTURED')
-    #     self.ii.approve_journal()
-    #
-    #     # Complete Adjust Receipt类型Journal
-    #     self.ii.journal_search(tin, journal_category='MAJ', journal_status='APPROVED')
-    #     self.ii.complete_journal()
-    #
-    # @ddt.data([temporaryFile_web_01])
-    # @ddt.unpack
-    # def test002_MAJ_ABFB(self, file_address):
-    #     # read file
-    #     tin = read_file('TIN', file_address=file_address)
-    #
-    #     # Capture Adjust Brought Forward Balance类型Journal
-    #     self.ii.journal_new(journal_type='MAJ')
-    #     self.ii.capture_miscellaneous_adjustment(tin=tin, journal_type='ABFB')
-    #
-    #     # Approve Adjust Brought Forward Balance类型Journal
-    #     self.ii.journal_search(tin, journal_category='MAJ', journal_status='CAPTURED')
-    #     self.ii.approve_journal()
-    #
-    #     # Complete Adjust Brought Forward Balance类型Journal
-    #     self.ii.journal_search(tin, journal_category='MAJ', journal_status='APPROVED')
-    #     self.ii.complete_journal()
-    #
-    #     # 读取document No.
-    #     ABFB_doc_no = self.ii.journal_search_doc_no(tin=tin, journal_category='MAJ', journal_type='BF', i=2)
-    #     write_file(file_address=file_address, **{'ABFB_doc_no':ABFB_doc_no})
+    @ddt.data([temporaryFile_web_01])
+    @ddt.unpack
+    def test001_MAJ_AR(self, file_address):
+        # read file
+        tin = read_file('TIN', file_address=file_address)
+
+        # Capture Adjust Receipt类型Journal
+        self.ii.journal_new(journal_type='MAJ')
+        self.ii.capture_miscellaneous_adjustment(tin=tin, journal_type='AR')
+
+        # Approve  Adjust Receipt类型Journal
+        self.ii.journal_search(tin, journal_category='MAJ', journal_status='CAPTURED')
+        self.ii.approve_journal()
+
+        # Complete Adjust Receipt类型Journal
+        self.ii.journal_search(tin, journal_category='MAJ', journal_status='APPROVED')
+        self.ii.complete_journal()
+
+    @ddt.data([temporaryFile_web_01])
+    @ddt.unpack
+    def test002_MAJ_ABFB(self, file_address):
+        # read file
+        tin = read_file('TIN', file_address=file_address)
+
+        # Capture Adjust Brought Forward Balance类型Journal
+        self.ii.journal_new(journal_type='MAJ')
+        self.ii.capture_miscellaneous_adjustment(tin=tin, journal_type='ABFB')
+
+        # Approve Adjust Brought Forward Balance类型Journal
+        self.ii.journal_search(tin, journal_category='MAJ', journal_status='CAPTURED')
+        self.ii.approve_journal()
+
+        # Complete Adjust Brought Forward Balance类型Journal
+        self.ii.journal_search(tin, journal_category='MAJ', journal_status='APPROVED')
+        self.ii.complete_journal()
+
+        # 读取document No.
+        ABFB_doc_no = self.ii.journal_search_doc_no(tin=tin, journal_category='MAJ', journal_type='BF', i=2)
+        write_file(file_address=file_address, **{'ABFB_doc_no':ABFB_doc_no})
 
     @ddt.data([temporaryFile_web_01])
     @ddt.unpack

@@ -114,3 +114,17 @@ def amount_change(orginal_amount, add_amount):
     else:
         change_amount = float(orginal_amount) + add_amount
         return change_amount
+
+
+def data_compare(original_data, sql_data):
+    if original_data.find('(') != -1:
+        original_data_update = original_data.replace('(', '')
+        original_data_update = original_data_update.replace(')', '')
+        original_data_update = float(original_data_update)
+    else:
+        original_data_update = float(original_data)
+    sql_data_update = abs(float(sql_data))
+    if abs(original_data_update - sql_data_update) <= 1:
+        return True
+    else:
+        return False

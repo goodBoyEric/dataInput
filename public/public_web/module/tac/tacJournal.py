@@ -163,18 +163,39 @@ class TACJournal:
         self.__change_default_iframe()
 
     def approve_journal(self):
+        tac_journal_handle = self.driver.current_window_handle
         self.__change_default_iframe()
         self.driver.switch_to_frame(iframe_reg_req_app)
         self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Approve_button).click()
         time.sleep(2)
         self.driver.switch_to_default_content()
         self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Capture_Approve_Yes_button_CSS).click()
+        time.sleep(3)
+        self.driver.switch_to_window(tac_journal_handle)
 
-    def send_back_journal(self):
-        pass
-
-    def reject_journal(self):
-        pass
+    def send_back_or_reject_journal(self, operate=0):
+        """
+        :param operate: 0,send back
+                        1,reject
+        :return:
+        """
+        tac_journal_handle = self.driver.current_window_handle
+        self.__change_default_iframe()
+        self.driver.switch_to_frame(iframe_reg_req_app)
+        if operate == 0:
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_SendBack_button).click()
+        elif operate == 1:
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Complete_button).click()
+        else:
+            raise AttributeError('operate 输入错误')
+        time.sleep(2)
+        self.driver.switch_to_default_content()
+        self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Input_Text).\
+            send_keys(RandomData().itas_random_char_nine*3)
+        time.sleep(0.5)
+        self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Capture_Approve_Yes_button_CSS).click()
+        time.sleep(2)
+        self.driver.switch_to_window(tac_journal_handle)
 
     def complete_journal(self):
         self.__change_default_iframe()
