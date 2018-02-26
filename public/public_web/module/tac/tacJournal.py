@@ -22,6 +22,15 @@ class TACJournal:
         self.driver.switch_to_default_content()
         self.driver.switch_to_frame(iframe_element)
 
+    def _journal_comment_element(self, tin):
+        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_TIN).send_keys(tin)
+        for i in [TAC_Journal_Capture_Submission_Source, TAC_Journal_Capture_Request_by]:
+            Select(self.driver.find_element(by=By.ID, value=i)).\
+                select_by_index(Random().randint(a=2, b=8))
+        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Requestor).send_keys(username)
+        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Description).\
+            send_keys(RandomData().itas_random_char_nine)
+
     def journal_new(self, journal_type):
         self.driver.get(self.URLTacJournal)
         self.__change_default_iframe()
@@ -71,90 +80,108 @@ class TACJournal:
         self.driver.find_element(by=By.ID, value=TAC_Journal_Search_Process_button).click()
         time.sleep(2)
 
-    def capture_miscellaneous_adjustment(self, tin, journal_type='',doc_no1=''):
+    def capture_miscellaneous_adjustment(self, tin, journal_type='', doc_no1=''):
+        try:
+            self.__change_default_iframe()
+            self.driver.switch_to_frame(iframe_reg_req_app)
+            self._journal_comment_element(tin)
+            if journal_type == 'AR':
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('AR')
+                self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_Add_button).click()
+                get_vat_doc_no = """select t.ctac03_document_num from ttac03_transaction t
+                                    inner join treg01_taxpayer a
+                                    on t.creg01_taxpayer_uid = a.creg01_taxpayer_uid and t.ctac03_cr_dr='Cr'
+                                    and a.creg01_tin =""" + str(tin)
+                doc_no = self.oracle.oracle_sql_execute_function(get_vat_doc_no,response=1)
+                time.sleep(2)
+                self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_AR_Doc_No_Text).send_keys(doc_no)
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Search_button).click()
+                time.sleep(1)
+                adjust_receipt_get_payment_date = self.driver.find_element\
+                    (by=By.CSS_SELECTOR,value=TAC_Journal_Capture_AR_Table_Data_CSS).text
+                edit_date = date(adjust_receipt_get_payment_date)
+                print(edit_date)
+                self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Capture_AR_Table_Data_CSS).click()
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Target_Issue_Date).clear()
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Target_Issue_Date).send_keys(edit_date)
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Add_to_Journal_button).click()
+                time.sleep(1)
+            elif journal_type == 'AA':
+                Select(self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_Journal_Type)).select_by_value('AA')
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
+                time.sleep(2)
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Doc_No_NO).click()
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Tax_Type)).select_by_value('1')
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Liability_Type)).\
+                    select_by_value('TAXLB')
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Tax_Year).clear()
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Search_button).click()
+                time.sleep(2)
+                original_amount = self.driver.find_element(
+                    by=By.CSS_SELECTOR, value=TAC_Journal_Capture_ARA_Table_Data_CSS+'10'+')').text
+                change_amount = amount_change(original_amount, 5000)
+                print(change_amount)
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Table_Data_Amount).\
+                    send_keys(str(change_amount))
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Add_to_Journal_button).click()
+                time.sleep(1)
+
+            elif journal_type == 'RT':
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('RJ')
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
+                time.sleep(2)
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Doc_No_Yes).click()
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Doc_No).send_keys(doc_no1)
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Search_button).click()
+                time.sleep(2)
+                self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Capture_RT_CheckAll_CSS).click()
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_AddtoJournal_button).click()
+                time.sleep(1)
+
+            elif journal_type == 'ABFB':
+                time.sleep(1)
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('BF')
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Type)).select_by_value('1')
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Liability_Type)).select_by_value('TAXLB')
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Year).clear()
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Year).send_keys('2019')
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Liability_Type).click()
+                time.sleep(1)
+                Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Period)).select_by_value('1')
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Amount).send_keys('2019')
+                self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
+            else:
+                pass
+            attachment_click_function(driver=self.driver,direct_element=TAC_Journal_Capture_attachments, *[])
+            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Submit_button).click()
+            time.sleep(2)
+        except Exception as err:
+            print(err)
+            self.driver.get_screenshot_as_file(file_picture +
+                                               'capture_miscellaneous_adjustment' + file_local_time + '.jpg')
+
+    def capture_write_off(self, tin='', journal_type=''):
         self.__change_default_iframe()
         self.driver.switch_to_frame(iframe_reg_req_app)
-        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_TIN).send_keys(tin)
-        for i in [TAC_Journal_Capture_Submission_Source, TAC_Journal_Capture_Request_by]:
-            Select(self.driver.find_element(by=By.ID, value=i)).\
-                select_by_index(Random().randint(a=2, b=8))
-        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Requestor).send_keys(username)
-        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Description).\
-            send_keys(RandomData().itas_random_char_nine)
-        if journal_type == 'AR':
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('AR')
-            self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_Add_button).click()
-            get_vat_doc_no = """select t.ctac03_document_num from ttac03_transaction t
-                                inner join treg01_taxpayer a
-                                on t.creg01_taxpayer_uid = a.creg01_taxpayer_uid and t.ctac03_cr_dr='Cr'
-                                and a.creg01_tin =""" + str(tin)
-            doc_no = self.oracle.oracle_sql_execute_function(get_vat_doc_no,response=1)
-            time.sleep(2)
-            self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_AR_Doc_No_Text).send_keys(doc_no)
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Search_button).click()
-            time.sleep(1)
-            adjust_receipt_get_payment_date = self.driver.find_element\
-                (by=By.CSS_SELECTOR,value=TAC_Journal_Capture_AR_Table_Data_CSS).text
-            edit_date = date(adjust_receipt_get_payment_date)
-            print(edit_date)
-            self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Capture_AR_Table_Data_CSS).click()
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Target_Issue_Date).clear()
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Target_Issue_Date).send_keys(edit_date)
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Add_to_Journal_button).click()
-            time.sleep(1)
-        elif journal_type == 'AA':
-            Select(self.driver.find_element(by=By.ID,value=TAC_Journal_Capture_Journal_Type)).select_by_value('AA')
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
-            time.sleep(2)
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Doc_No_NO).click()
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Tax_Type)).select_by_value('1')
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Liability_Type)).\
-                select_by_value('TAXLB')
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Tax_Year).clear()
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Search_button).click()
-            time.sleep(2)
-            original_amount = self.driver.find_element(
-                by=By.CSS_SELECTOR, value=TAC_Journal_Capture_ARA_Table_Data_CSS+'10'+')').text
-            change_amount = amount_change(original_amount, 5000)
-            print(change_amount)
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_ARA_Table_Data_Amount).\
-                send_keys(str(change_amount))
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_AR_Add_to_Journal_button).click()
-            time.sleep(1)
+        if tin == '':
+            raise AttributeError('capture_write_off tin is null')
+        self._journal_comment_element(tin)
 
-        elif journal_type == 'RT':
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('RJ')
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
-            time.sleep(2)
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Doc_No_Yes).click()
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Doc_No).send_keys(doc_no1)
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_Search_button).click()
-            time.sleep(2)
-            self.driver.find_element(by=By.CSS_SELECTOR, value=TAC_Journal_Capture_RT_CheckAll_CSS).click()
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_RT_AddtoJournal_button).click()
-            time.sleep(1)
-
-        elif journal_type == 'ABFB':
-            time.sleep(1)
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Journal_Type)).select_by_value('BF')
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Type)).select_by_value('1')
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Liability_Type)).select_by_value('TAXLB')
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Year).clear()
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Year).send_keys('2019')
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Liability_Type).click()
-            time.sleep(1)
-            Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Tax_Period)).select_by_value('1')
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Amount).send_keys('2019')
-            self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
+        # 1:Write-off Tax 2:Write-off Penalties 3:Write-off Interest 4:Write-off Tax and Penalties
+        # 5.Write-off Tax and Interest 6:Write-off Penalties and Interest 7:Write-off All Debt
+        if journal_type == '':
+            select_journal_type_index = 1
         else:
-            pass
+            select_journal_type_index = int(journal_type)
+        Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Write_Off_Type)).\
+            select_by_index(select_journal_type_index)
+        Select(self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Write_Off_Reason)).\
+            select_by_index(Random().randint(1, 6))
+        # Add button
+        self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_BF_Add_button).click()
+        time.sleep(1)
         attachment_click_function(driver=self.driver,direct_element=TAC_Journal_Capture_attachments, *[])
         self.driver.find_element(by=By.ID, value=TAC_Journal_Capture_Submit_button).click()
-        time.sleep(2)
-
-    def capture_write_off(self):
-        self.__change_default_iframe()
-        self.driver.find_element(by=By.ID,)
 
     def capture_reallocation_of_receipt(self):
         self.__change_default_iframe()

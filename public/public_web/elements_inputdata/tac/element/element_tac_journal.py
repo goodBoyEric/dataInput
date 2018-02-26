@@ -82,3 +82,8 @@ TAC_Journal_Capture_ARA_Table_Data_Amount = 'input_reviseAmount_0'
 TAC_Journal_Input_Text= 'textarea.txt'
 
 # reject journal
+
+# write off journal
+TAC_Journal_Capture_Write_Off_Authorization_Number = 'entity_ctac01AuthorizationNumber'
+TAC_Journal_Capture_Write_Off_Type = 'entity_ctac01JournalType'
+TAC_Journal_Capture_Write_Off_Reason = 'entity_ctac01JournalReasonType'

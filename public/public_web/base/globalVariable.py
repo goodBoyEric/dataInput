@@ -48,9 +48,11 @@ excel_result_address = public_path + '\\data_excel\\result.xlsx'
 # Local Time
 Local_Time = time.strftime('%d-%m-%Y', time.localtime())
 file_local_time = time.strftime('%y%m%d_%H%M%S', time.localtime())
+file_picture = public_path + '\\temporaryFile\\picture\\'
 
 # 浏览器驱动
 browser_driver = Chrome()
+# browser_driver.get_screenshot_as_file()
 # browser_driver.find_element().is_displayed()
 
 # iframe
